@@ -6,22 +6,25 @@ const getHomePage = (req, res) => {
 }
 
 const getAllPosts = async (req, res) => {
+    let posts;
     try {
-        const posts = await Posts.find({}).sort("title");
-        for (const post of posts) {
-            const getParams = {
-                Bucket: s3Params.Bucket,
-                Key: post.content.rand_name_key,
-                ResponseContentDisposition: 'attachment',
-                FileName: 'customName'
-            }
-            const command = new GetObjectCommand(getParams);
-                const fileUrl = await getSignedUrl(s3, command, { expiresIn: 3600 })
-                post.content.url = fileUrl;
-            res.status(200).send(posts);
-        }
+        posts = await Posts.find({}).sort("title");
     } catch (error) {
         console.log(error);
+    }
+    for (const post of posts) {
+        const getParams = {
+            Bucket: s3Params.Bucket,
+            Key: post.content.rand_name_key,
+            ResponseContentDisposition: 'attachment',
+            FileName: 'customName'
+        }
+        const command = new GetObjectCommand(getParams);
+        const fileUrl = await getSignedUrl(s3, command, { expiresIn: 3600 })
+        .catch(err => console.log(err));
+        post.content.url = fileUrl;
+
+        res.status(200).send(posts);
     }
 }
 
@@ -40,13 +43,13 @@ const deleteSinglePost = async (req, res) => {
         }
         const command = new DeleteObjectCommand(delParams);
         await s3.send(command);
-    
+
         await Posts.deleteOne({ rand_name_key: id });
         res.status(200).send({ message: "Deleted successfully." });
     } catch (error) {
         console.log(error);
     }
-   
+
 
 
 }
