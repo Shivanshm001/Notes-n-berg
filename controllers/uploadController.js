@@ -10,8 +10,6 @@ const randomFileName = () => crypto.randomBytes(32).toString('hex');
 
 const uploadFile = async (req, res, next) => {
     const randKey = randomFileName();
-    console.log(randKey);
-
     const { title, des,sem, type } = req.body;
 
     //Params required for making put request to AWS S3
@@ -22,8 +20,11 @@ const uploadFile = async (req, res, next) => {
         ContentType: req.file.mimetype
     }
     const command = new PutObjectCommand(putParams);
-    await s3.send(command)
-
+    try{
+        await s3.send(command)
+    }catch (error) { 
+        console.log(error);
+    }
     //Data for the POSTS_MODLE for mongoose.
     const postCreateData = {
         title: title,

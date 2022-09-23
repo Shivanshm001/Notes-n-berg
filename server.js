@@ -17,20 +17,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 //Serving routes
-app.use("/",rootRouter);
+app.use("/", rootRouter);
 app.use("/about", aboutRoute);
-app.use("/upload",uploadRoute);
+app.use("/upload", uploadRoute);
 
 //For any routes other than those above (needed to run react router);
-app.use((req,res)=>{
-    res.status(200).sendFile(path.resolve(__dirname,"public","index.html"));
+app.use((req, res) => {
+    res.status(200).sendFile(path.resolve(__dirname, "public", "index.html"));
 })
 
 const PORT = process.env.PORT || 5000;
-async function start(){
-    await connectDB(process.env.MONGO_URI_POSTS);
-    app.listen(PORT, () => {
-        console.log(`Server running at port ${PORT}`);
-    })
+async function start() {
+    try {
+        await connectDB(process.env.MONGO_URI_POSTS);
+        app.listen(PORT, () => {
+            console.log(`Server running at port ${PORT}`);
+        })
+    } catch (error) {
+        console.log(error);
+    }
 }
 start();
