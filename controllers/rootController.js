@@ -22,6 +22,7 @@ const getAllPosts = async (req, res) => {
         const command = new GetObjectCommand(getParams);
         const fileUrl = await getSignedUrl(s3, command, { expiresIn: 3600 })
         .catch(err => console.log(err));
+        
         post.content.url = fileUrl;
 
         res.status(200).send(posts);
