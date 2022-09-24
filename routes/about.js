@@ -4,6 +4,6 @@ const {
     sendFeedback
 } = require('../controllers/aboutController')
 
-router.route("/").get(getAboutPage).post(sendFeedback);
+router.route("/").post(sendFeedback);
 
 module.exports = router;
