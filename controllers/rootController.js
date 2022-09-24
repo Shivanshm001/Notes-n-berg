@@ -17,16 +17,16 @@ const getAllPosts = async (req, res) => {
             Bucket: s3Params.Bucket,
             Key: post.content.rand_name_key,
             ResponseContentDisposition: 'attachment',
-            FileName: 'customName'
         }
         const command = new GetObjectCommand(getParams);
-        const fileUrl = await getSignedUrl(s3, command, { expiresIn: 3600 })
-        .catch(err => console.log(err));
-        
+       try {
+        const fileUrl = await getSignedUrl(s3, command, { expiresIn: 3600 })   
         post.content.url = fileUrl;
-
-        res.status(200).send(posts);
+       } catch (error) {
+        console.log(error)
+       }
     }
+    res.status(200).send(posts);
 }
 
 const deleteSinglePost = async (req, res) => {
