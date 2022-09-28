@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const {
-    getAboutPage,
     sendFeedback
 } = require('../controllers/aboutController')
 
