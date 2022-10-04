@@ -1,9 +1,7 @@
 const Posts = require('../db/modles/postsModle');
 const { s3, s3Params, getSignedUrl, GetObjectCommand, DeleteObjectCommand } = require('../S3/S3');
 
-const getHomePage = (req, res) => {
-    res.status(200).send("Hello World!");
-}
+
 
 const getAllPosts = async (req, res) => {
     let posts;
@@ -50,9 +48,6 @@ const deleteSinglePost = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-
-
-
 }
 
 module.exports = {

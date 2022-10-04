@@ -5,7 +5,6 @@ const {
     deleteSinglePost
 } = require('../controllers/rootController');
 
-router.route("/").get(getHomePage);
 router.route("/posts").get(getAllPosts);
 router.route('/posts/delete/:id').delete(deleteSinglePost);
 
