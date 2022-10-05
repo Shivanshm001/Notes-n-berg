@@ -51,7 +51,6 @@ const deleteSinglePost = async (req, res) => {
 }
 
 module.exports = {
-    getHomePage,
     getAllPosts,
     deleteSinglePost,
 }
