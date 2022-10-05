@@ -1,5 +1,5 @@
 const Posts = require('../db/modles/postsModle');
-const { s3, s3Params, getSignedUrl, GetObjectCommand, DeleteObjectCommand } = require('../S3/S3');
+const { s3, getSignedUrl, GetObjectCommand, DeleteObjectCommand } = require('../S3/S3');
 
 
 
@@ -12,7 +12,7 @@ const getAllPosts = async (req, res) => {
     }
     for (const post of posts) {
         const getParams = {
-            Bucket: s3Params.Bucket,
+            Bucket: process.env.BUCKET_NAME,
             Key: post.content.rand_name_key,
             ResponseContentDisposition: 'attachment',
         }
@@ -28,25 +28,27 @@ const getAllPosts = async (req, res) => {
 }
 
 const deleteSinglePost = async (req, res) => {
-    const { id } = req.params;
+    console.log(req.params.id);
     try {
-        const post = await Posts.findOne({ rand_name_key: id });
+        const post = await Posts.findOne({ rand_name_key: req.params.id });
         if (!post) {
             console.log("Post not found");
             res.status(404).json({ message: "Post not found" });
             return;
         }
         const delParams = {
-            Bucket: s3Params.Bucket,
+            Bucket: process.env.BUCKET_NAME,
             Key: post.content.rand_name_key,
         }
+        console.log(`POST : ${post}`);
         const command = new DeleteObjectCommand(delParams);
         await s3.send(command);
 
-        await Posts.deleteOne({ rand_name_key: id });
+        await Posts.deleteOne({ rand_name_key: req.params.id });
         res.status(200).send({ message: "Deleted successfully." });
     } catch (error) {
         console.log(error);
+        res.status(500).send({ message: "Internal Server Error." });
     }
 }
 

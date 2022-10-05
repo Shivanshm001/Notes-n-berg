@@ -8,8 +8,6 @@ const crypto = require('crypto');
 // console.log(crypto.randomBytes(32).toString('hex'));
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
-
-const bucketName = process.env.BUCKET_NAME
 const bucketRegion = process.env.BUCKET_REGION
 const accessKey = process.env.AWS_ACCESS_KEY
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
@@ -23,12 +21,9 @@ const s3 = new S3Client({
 });
 
 
-const s3Params = {
-    Bucket: bucketName,
-}
+
 module.exports = {
     s3,
-    s3Params,
     PutObjectCommand,
     GetObjectCommand,
     DeleteObjectCommand,

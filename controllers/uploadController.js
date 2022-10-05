@@ -1,5 +1,5 @@
 
-const { s3, s3Params, PutObjectCommand } = require('../S3/S3');
+const { s3, PutObjectCommand } = require('../S3/S3');
 const Posts = require('../db/modles/postsModle');
 const crypto = require('crypto');
 
@@ -14,7 +14,7 @@ const uploadFile = async (req, res, next) => {
 
     //Params required for making put request to AWS S3
     const putParams = {
-        ...s3Params,
+        Bucket: process.env.BUCKET_NAME,
         Key: randKey,
         Body: req.file.buffer,
         ContentType: req.file.mimetype
@@ -46,7 +46,6 @@ const uploadFile = async (req, res, next) => {
     })
 
     res.status(200).json({ success: true, post: post });
-    next();
 }
 
 
@@ -54,7 +53,6 @@ const uploadLink = async (req, res, next) => {
     const { link, title, des } = req.body;
     console.log(link, title, des);
     res.json({ success: true });
-    next();
 }
 module.exports = {
     uploadFile,
