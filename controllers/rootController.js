@@ -28,9 +28,8 @@ const getAllPosts = async (req, res) => {
 }
 
 const deleteSinglePost = async (req, res) => {
-    console.log(req.params.id);
     try {
-        const post = await Posts.findOne({ rand_name_key: req.params.id });
+        const post = await Posts.findOne({ "content.rand_name_key": req.params.id });
         if (!post) {
             console.log("Post not found");
             res.status(404).json({ message: "Post not found" });
@@ -40,11 +39,10 @@ const deleteSinglePost = async (req, res) => {
             Bucket: process.env.BUCKET_NAME,
             Key: post.content.rand_name_key,
         }
-        console.log(`POST : ${post}`);
         const command = new DeleteObjectCommand(delParams);
         await s3.send(command);
 
-        await Posts.deleteOne({ rand_name_key: req.params.id });
+        await Posts.deleteOne({ "content.rand_name_key": req.params.id });
         res.status(200).send({ message: "Deleted successfully." });
     } catch (error) {
         console.log(error);
